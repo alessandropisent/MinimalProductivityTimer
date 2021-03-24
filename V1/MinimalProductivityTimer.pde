@@ -1,4 +1,4 @@
-
+import processing.sound.*;
 int wid = 1000;
 int high = 700;
 
@@ -61,16 +61,16 @@ int[] timerMaterie = {60*60,10*60,30*60};
 int[] checkMaxMaterie = {5,3,3};
 boolean[] select = {false,false,false};
 
-
+SoundFile notif;
 
 void setup(){
   
     size(1000,700);
     background(0,0,0);
-    TimerFont= createFont("SevenSegment.ttf",100);
-    mono = createFont("coolvetica.ttf",20);
-  
-   
+    TimerFont= createFont("lib/SevenSegment.ttf",100);
+    mono = createFont("lib/coolvetica.ttf",20);
+     
+    notif = new SoundFile(this, "lib/definite.mp3");
     
     frameRate(30);
 }
@@ -103,7 +103,7 @@ void draw(){
     //textDebug
     //textDebug(Boolean.toString(finished));
     //Lines
-    drawHalfVerticalLine();
+    // drawHalfVerticalLine();
     //drawHalfHorizontalLine();
     
     
@@ -191,6 +191,8 @@ void conta(){
     }
     if (!select[0]&&!select[1]&&!select[2])
         checkMaterie[3]++;
+        
+    notif.play();
   }
   
   //Fare Emettere qualche suono

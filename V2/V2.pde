@@ -1,4 +1,4 @@
-
+import processing.sound.*;
 int wid = 1000;
 int high = 700;
 
@@ -41,18 +41,17 @@ int fillPlanning = #818181;
 int fillPlanningText = #FFFFFF;
 int[] fillCheck={#FFFFFF,#FFFFFF,#FFFFFF};
 
-
+//Booleani per gestire io mouse
 boolean overStart = false;
 boolean overStop = false;
 boolean overStudio = false;
 boolean overRelax = false;
 boolean overPlanning= false;
 
-
-
-//Variabili font
+//Variabili Files
 PFont TimerFont;
 PFont mono;
+SoundFile notif;
 
 // Materie da checkare
 String[] stingheMaterie = {"Studio", "Relax", "Planning"};
@@ -61,20 +60,22 @@ int[] timerMaterie = {60*60,10*60,30*60};
 int[] checkMaxMaterie = {5,3,3};
 boolean[] select = {false,false,false};
 
+Categoria Studio = new Categoria({wid/2-matLen/2, space, matLen, matHi }, )  
 
-
+// Funzione principale
 void setup(){
-  
+
     size(1000,700);
     background(0,0,0);
-    TimerFont= createFont("SevenSegment.ttf",100);
-    mono = createFont("coolvetica.ttf",20);
-  
-   
+    TimerFont= createFont("lib/SevenSegment.ttf",100);
+    mono = createFont("lib/coolvetica.ttf",20);
+     
+    notif = new SoundFile(this, "lib/definite.mp3");
     
     frameRate(30);
-}
+}//setup
 
+//Funzione principale 
 void draw(){
     // Background black
     background(0,0,0);
@@ -103,13 +104,23 @@ void draw(){
     //textDebug
     //textDebug(Boolean.toString(finished));
     //Lines
-    drawHalfVerticalLine();
+    // drawHalfVerticalLine();
     //drawHalfHorizontalLine();
     
-    
+}//draw
 
-}
+/*  Funzione che aggiorna i Booleani che vengono usati per fare controlli
+    successivi
 
+    IOG overStart bool se il mouse e' sopra il tasto start
+    IOG overStop bool se il mouse e' sopra il tasto stop
+    IOG overStudio bool se il mouse e' sopra il riquadro di studio
+    IOG overRelax bool se il mouse e' sopra il riquadro di Relax
+    IOG overPlanning bool se il mouse e' sopra il riquadro di Planning
+    IOG finished Bool che mi dice se il timer ha finito
+    IOG counted Bool che mi dice se e' da contare 
+
+*/
 void update(){
   
   overStart = checkOver(start);
@@ -121,8 +132,21 @@ void update(){
   finished = t.isOver();
   counted = t.isCounted();
   
-  
 }
+
+/*  Funzione che disegna i bottoni
+    IG $paused bool variabile che mi dice se il timer e' in pausa
+    IG $finished bool variabile che mi dice se il timer ha finito
+    IG $start array di interi con le dimensioni del tasto di start
+    IG $textStart Stringa con il testo da mettere dentro il bottone start
+    IG $fillStart intero che dice il colore con cui deve essere colorato il
+        bottone start 
+    IG $stop array di interi con le dimensioni del tasto di stop
+    IG $textStop Stringa con il testo da mettere dentro il bottone di stop
+    IG $fillStop intero che dice il colore con cui deve essere colorato il
+        bottone stop 
+    
+*/
 
 void disegnaBottoni(){
 
@@ -148,6 +172,12 @@ void disegnaBottoni(){
 
 }
 
+/*  Funzione che disegna le crocette dei timer indipendenti
+    IG $checkMaterie[3] elemento che contiene il numero di timer,
+      indipendenti dalle categorie, fatte
+
+
+*/
 void disegnCheckIndipendenti(){
   
   if (checkMaterie[3]>0){
@@ -161,11 +191,14 @@ void disegnCheckIndipendenti(){
        int y = rectY+matHi/2;
   
           crocetta(x,y,diameter,#FFFFFF);
-    }
-  }
+    }//For
+  }//if
 
 }
 
+/*  Funzione che disegna tutte le Categorie di timer messe
+    
+*/
 void disegnaMaterie(){
 
   drawMateria( Studio,  stingheMaterie[0], checkMaterie[0],checkMaxMaterie[0], fillStudio, fillStudioText, fillCheck[0]);
@@ -191,6 +224,8 @@ void conta(){
     }
     if (!select[0]&&!select[1]&&!select[2])
         checkMaterie[3]++;
+        
+    notif.play();
   }
   
   //Fare Emettere qualche suono
@@ -415,6 +450,54 @@ void textDebug(String s){
   textFont(mono);
   textAlign(LEFT,CENTER);
   text("Debug:"+ s, 10, height-20);
+
+}
+
+public class Categoria{
+
+    int[] spaceCat;
+    int fillSpace;
+    int fillText;
+    int fillCheck;
+    int check;
+    int checkMax;
+    int duration;
+    boolean overIt;
+    boolean select;
+    String Titolo;
+    
+    Categoria(int[] spaceCategory, int fill_Space, int fill_Text, int fill_Check, int check_, int check_Max, String Text,dur){
+        spaceCat = spaceCategory;
+        fillSpace = fill_Space;
+        fillText = fill_Text;
+        fillCheck = fill_Check;
+        check= check_;
+        checkMax= check_Max;
+        overIt=false;
+        Titolo = Text;
+        duration = dur
+    }
+
+    int[] retCheck(){
+      return {check,checkMax,fillCheck};
+    }
+
+    int[] retSpace(){
+      return spaceCat();
+    }
+
+    void changeFill(fillSpace1, fillText1, fillCheck1){
+      fillSpace = fillSpace1;
+      fillText = fillText1;
+      fillCheck = fillText1;
+    }
+    void 
+    boolean isItOver(){
+      return overIT;
+    }
+    void itIsOver(boolean b){
+      overIt = b;
+    }
 
 }
 
