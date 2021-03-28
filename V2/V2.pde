@@ -23,23 +23,8 @@ String textStop = "Stop";
 String textPause = "Resume";
 int fillStop = #FFFFFF;
 
-//Variabili per caselle di materie
-int matLen = wid/2+50;
-int matHi = 50;
-int space = 20;
-int spaceWords= 200;
-int spaceChecks = 25;
-int diameter = 10;
-int[] Studio= {wid/2-matLen/2, space, matLen, matHi };
-int[] Relax = {wid/2-matLen/2, space*2+matHi, matLen, matHi };
-int[] Planning = {wid/2-matLen/2, space*3+matHi*2, matLen, matHi };
-int fillStudio = #818181;
-int fillStudioText = #FFFFFF;
-int fillRelax = #818181;
-int fillRelaxText = #FFFFFF;
-int fillPlanning = #818181;
-int fillPlanningText = #FFFFFF;
-int[] fillCheck={#FFFFFF,#FFFFFF,#FFFFFF};
+
+
 
 //Booleani per gestire io mouse
 boolean overStart = false;
@@ -452,7 +437,34 @@ void textDebug(String s){
   text("Debug:"+ s, 10, height-20);
 
 }
+public class Categorie{
 
+  int matLen = wid/2+50;
+  int matHi = 50;
+  int space = 20;
+  int spaceWords= 200;
+  int spaceChecks = 25;
+  int diameter = 10;
+  int[] Studio= {wid/2-matLen/2, space, matLen, matHi };
+  int[] Relax = {wid/2-matLen/2, space*2+matHi, matLen, matHi };
+  int[] Planning = {wid/2-matLen/2, space*3+matHi*2, matLen, matHi };
+  int fillStudio = #818181;
+  int fillStudioText = #FFFFFF;
+  int fillRelax = #818181;
+  int fillRelaxText = #FFFFFF;
+  int fillPlanning = #818181;
+  int fillPlanningText = #FFFFFF;
+  int[] fillCheck={#FFFFFF,#FFFFFF,#FFFFFF};
+  // Materie da checkare
+  String[] stingheMaterie = {"Studio", "Relax", "Planning"};
+  int[] checkMaterie = {0,0,0,0};
+  int[] timerMaterie = {60*60,10*60,30*60};
+  int[] checkMaxMaterie = {5,3,3};
+  boolean[] select = {false,false,false};
+
+
+
+}
 public class Categoria{
 
     int[] spaceCat;

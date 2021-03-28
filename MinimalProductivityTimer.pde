@@ -9,6 +9,7 @@ int defaultTimer = 30*60;
 int timerTime = defaultTimer;
 boolean finished = false;
 boolean counted = false;
+boolean running=false;
 
 // Variabili bottoni
 int l = 100;
@@ -67,10 +68,10 @@ void setup(){
 
     size(1000,700);
     background(0,0,0);
-    TimerFont= createFont("SevenSegment.ttf",100);
-    mono = createFont("coolvetica.ttf",20);
+    TimerFont= createFont("lib/SevenSegment.ttf",100);
+    mono = createFont("lib/coolvetica.ttf",20);
      
-    notif = new SoundFile(this, "definite.mp3");
+    notif = new SoundFile(this, "lib/definite.mp3");
     
     frameRate(30);
 }//setup
@@ -207,33 +208,33 @@ void disegnaMaterie(){
 
 }
 
-
+// Funzione che controlla che il mouse non sia sopra un bottone
 boolean checkOver(int[] butt){
   return overRect(butt[0],butt[1],butt[2],butt[3]);
 }
 
+// Conta se ho finito i timer
 void conta(){
 
   if(counted){
-     
+     // Controllo delle materie selezionate
     for(int i = 0; i<3; i++){
       
       if (select[i])
         checkMaterie[i]++;
     
     }
+    // Se e' un'attività generica
     if (!select[0]&&!select[1]&&!select[2])
         checkMaterie[3]++;
-        
+    //riproduce suono    
     notif.play();
   }
-  
-  //Fare Emettere qualche suono
-  //TODO:
   
 
 }
 
+// Funzione che cambia le variabili dei colori dati gli stati del programma e dove si trova il mouse
 void changeUI(){
 
   // Change dei colori dei bottoni
@@ -283,7 +284,7 @@ void changeUI(){
 
 }
 
-// Controllo che il mouse sia sul bottone
+// Controllo che il mouse sia sul bottoni
 boolean overRect(int x, int y, int width, int height)  {
   if (mouseX >= x && mouseX <= x+width && 
       mouseY >= y && mouseY <= y+height) {
@@ -295,6 +296,7 @@ boolean overRect(int x, int y, int width, int height)  {
 
 
 //EVENTO pressione mouse
+// Qui vengono effettivamente chiamate e modificati gli stati del programma
 void mousePressed(){
   
   clickBottoni();
@@ -302,35 +304,52 @@ void mousePressed(){
   
 }
 
+// Funzione a parte solo se vengono cliccati i bottoni
 void clickBottoni(){
 
   // se e' sopra start e non e' ne in pause ne ha finito
   if(overStart && !paused && !finished){
       t.start(timerTime);
+      running = true;
   }
   //se e' sopra start e o e' nello stato di pausa o non e' nello stato di pausa
   // ma non ha finito allora resetta il timer
   else if(overStart && ((!paused && finished)||paused)){
     t.reset();
     paused = false;
+    running = false;
   }
-  // condizione di paisa 
-  else if(overStop && !paused && !finished){
+  // condizione di pausa 
+  else if(overStop && !paused && !finished && running){
       
       t.pause();
       paused = true;
+      running = false;
     
   }
+  //Condizone per aggiungere tick nel caso di crash
+  else if(overStop && !paused && !finished &&!running){
+    
+    for(int i = 0; i < 3; i++){
+      
+      if(select[i])
+        checkMaterie[i]++;
+      
+    }
+  
+  }
   //Condizione per riprendere 
-  else if(overStop && paused && !finished){
+  else if(overStop && paused && !finished && !running){
   
       t.resume();
       paused = false;
+      running = true;
     
   }
 
 }
 
+// Qui se il mouse e' sopra le maerie ca
 void clickMaterie(){
 
   if(overStudio && !select[0]){
@@ -382,6 +401,7 @@ void drawButton(int[] butt, String Frase, int fillB){
 
 }
 
+// Disegna una data materia
 void drawMateria(int[] mat, String Titolo, int check, int checkMax, int fillM, int fillText, int fillCheck){
 
   fill(fillM);
@@ -396,7 +416,7 @@ void drawMateria(int[] mat, String Titolo, int check, int checkMax, int fillM, i
 
 
 }
-
+// Disegna le crocette e i pallini
 void drawChecks(int[] mat, int check, int checkMax, int fillCheck){
   int max = checkMax;
   fill(fillCheck);
@@ -452,6 +472,8 @@ void textDebug(String s){
   text("Debug:"+ s, 10, height-20);
 
 }
+
+// Classe per la definizione del oggetto timer
 public class Timer {
     
     long startTime;
